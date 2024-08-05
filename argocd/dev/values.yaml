@@ -1,0 +1,5 @@
+replicaCount: 3
+springProfile: dev
+ingress:
+  hosts:
+    - host: dev.spring-boot-api.local

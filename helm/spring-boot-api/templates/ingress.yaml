@@ -1,0 +1,30 @@
+# Ingress to route traffic to services. Istio could be used here.
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: spring-boot-api-ingress
+  annotations:
+    {{- if .Values.ingress.annotations }}
+    {{ toYaml .Values.ingress.annotations | indent 4 }}
+    {{- end }}
+spec:
+  rules:
+    {{- range .Values.ingress.hosts }}
+    - host: {{ .host }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: spring-boot-api
+                port:
+                  number: {{ .port }}
+          {{- end }}
+    {{- end }}
+  tls:
+    {{- if .Values.ingress.tls }}
+    {{- toYaml .Values.ingress.tls | indent 4 }}
+    {{- end }}

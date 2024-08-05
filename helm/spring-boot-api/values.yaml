@@ -1,0 +1,59 @@
+# Values for helm chart. To be overriden by env specific vals.
+
+replicaCount: 3
+
+image:
+  repository: busybox
+  tag: stable
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+      path: /api
+    - port: 8081
+      targetPort: 8081
+      path: /logs
+    - port: 8082
+      targetPort: 8082
+      path: /soap
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+ingress:
+  enabled: true
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /api
+          port: 8080
+        - path: /logs
+          port: 8081
+        - path: /soap
+          port: 8082
+  tls: []
+
+livenessProbe:
+  tcpSocket:
+    port: 8080
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+readinessProbe:
+  tcpSocket:
+    port: 8080
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
+secret:
+  apiKey: {{ randAlphaNum 32 | quote }}
+  dbPassword: {{ randAlphaNum 16 | quote }}

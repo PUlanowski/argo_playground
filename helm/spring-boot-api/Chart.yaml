@@ -1,0 +1,7 @@
+# metadata so called umbrella chart for helm
+
+apiVersion: v2
+name: spring-boot-api
+description: A Helm chart for Spring Boot API application
+version: 0.1.0
+appVersion: "1.0"
